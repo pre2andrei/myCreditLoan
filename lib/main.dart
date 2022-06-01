@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_credit_loans/screens/PersonalDataFormScreen.dart';
-import 'package:my_credit_loans/utils/Spacing.dart';
 
 import 'screens/LoanDataScreen.dart';
 
