@@ -74,22 +74,20 @@ class _PersonalDataFormScreenState extends State<PersonalDataFormScreen> {
                           });
                         }),
                     Text(isEmployed ? 'Yes' : 'No'),
-                    const Spacing(
-                      vertical: true,
-                    ),
                   ],
                 ),
-                PersonalDataTextField(
-                  controller: jobController,
-                  hint: 'Job Title',
-                  req: isEmployed,
-                ),
+                if (isEmployed)
+                  PersonalDataTextField(
+                    controller: jobController,
+                    hint: 'Job Title',
+                    req: isEmployed,
+                  ),
                 const Spacing(
                   vertical: true,
                 ),
                 PersonalDataTextField(
                   controller: salaryController,
-                  hint: 'Current Salary (€)',
+                  hint: 'Current Income (€)',
                   currency: true,
                 ),
                 const Spacing(vertical: true),
@@ -112,8 +110,8 @@ class _PersonalDataFormScreenState extends State<PersonalDataFormScreen> {
                         child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
-                        onPressed: () {
-                          pickImage(ImageSource.gallery);
+                        onPressed: () async {
+                          await pickImage(ImageSource.gallery);
                           setState(() {
                             showPicError = false;
                           });
@@ -131,7 +129,7 @@ class _PersonalDataFormScreenState extends State<PersonalDataFormScreen> {
                             showPicError = false;
                           });
                         },
-                        child: Text('Take a Picture'),
+                        child: const Text('Take a Picture'),
                       ),
                     ))
                   ],
@@ -149,7 +147,8 @@ class _PersonalDataFormScreenState extends State<PersonalDataFormScreen> {
                                 showPicError = true;
                               });
                             }
-                            if (!_formKey.currentState!.validate()||image == null) return;
+                            if (!_formKey.currentState!.validate() ||
+                                image == null) return;
 
                             int eligibilityScore = 0;
                             try {
@@ -158,7 +157,8 @@ class _PersonalDataFormScreenState extends State<PersonalDataFormScreen> {
                                           'https://www.random.org/integers/?num=1&min=1&max=6&col=1&base=10&format=plain&rnd=new')))
                                   .body);
                             } catch (e) {
-                              showDialog(barrierDismissible: false,
+                              showDialog(
+                                  barrierDismissible: false,
                                   context: context,
                                   builder: (context) => AlertDialog(
                                         title: const Text('Error'),
@@ -185,7 +185,7 @@ class _PersonalDataFormScreenState extends State<PersonalDataFormScreen> {
                             }
 
                             showDialog(
-                              barrierDismissible: false,
+                                barrierDismissible: false,
                                 context: context,
                                 builder: (context) => AlertDialog(
                                       title: const Text('Eligibility Score'),
@@ -202,7 +202,10 @@ class _PersonalDataFormScreenState extends State<PersonalDataFormScreen> {
                                       ),
                                       actions: <Widget>[
                                         TextButton(
-                                          child: const Text('Okey'),
+                                          child: const Text(
+                                            'Ok',
+                                            style: TextStyle(fontSize: 16),
+                                          ),
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
@@ -245,10 +248,11 @@ class PersonalDataTextField extends StatelessWidget {
           numeric || currency ? TextInputType.number : TextInputType.text,
       controller: controller,
       decoration: InputDecoration(
+          floatingLabelBehavior: FloatingLabelBehavior.always,
           suffixText: currency ? '€' : null,
           hintText: hint,
           border: const UnderlineInputBorder(
-              borderSide:const  BorderSide(color: Colors.blue))),
+              borderSide: const BorderSide(color: Colors.blue))),
       validator: !req
           ? null
           : (value) {
